@@ -75,6 +75,7 @@
     <Compile Include="Assets\Script\S_Move.cs" />
     <Compile Include="Assets\Script\Scroll.cs" />
     <Compile Include="Assets\Script\Sound_Effect.cs" />
+    <Compile Include="Assets\Script\UI.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>E:/Unity2D/-----Lost-In-Space--master/Snake!/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

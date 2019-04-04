@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class Game_Manager : MonoBehaviour
 {
@@ -8,6 +10,7 @@ public class Game_Manager : MonoBehaviour
     public EnemyGenerator enemy_Generator = null;
     public ObjectCreater object_Generator = null;
     public S_Move s_move = null;
+    public UI ui = null;
     private static Vector3 tr_player;
     public bool isPaused = false;
 
@@ -32,10 +35,11 @@ public class Game_Manager : MonoBehaviour
     {
         enemy_Generator = this.gameObject.GetComponent<EnemyGenerator>();
         object_Generator = this.gameObject.GetComponent<ObjectCreater>();
+        ui = this.gameObject.GetComponent<UI>();
         s_move = GameObject.FindGameObjectWithTag("Player").GetComponent<S_Move>();
         is_dead_gameManager = false;
         this.next_step = STEP.TITLE;
-        this.guistyle.fontSize = 30;
+        this.guistyle.fontSize = 50;
         stopGame();
     }
 
@@ -75,8 +79,10 @@ public class Game_Manager : MonoBehaviour
             switch (this.step)
             {
                 case STEP.DIE:
-                    stopGame();
+                    //stopGame();
                     this.clear_time = this.step_timer;
+                    if(Input.touchCount > 0)
+                    SceneManager.LoadScene("GameScene");                    
                     break;
             }
             this.step_timer = 0.0f;
@@ -88,14 +94,17 @@ public class Game_Manager : MonoBehaviour
     {
         is_dead_gameManager = dead;
     }
+
     public bool Get_dead()
     {
         return is_dead_gameManager;
 	}
+
    public void Set_tr(Vector3 tr)
     {
         tr_player = tr;
     }
+
     public Vector3 Get_tr()
     {
         return tr_player;
@@ -111,23 +120,25 @@ public class Game_Manager : MonoBehaviour
 
     private void OnGUI()
     {
-        Font myFont = (Font)Resources.Load("Fonts/comic", typeof(Font));
+        //Font myFont = (Font)Resources.Load("Font/Tripfive", typeof(Font));
+
+        //guistyle.font = myFont;
 
         switch (this.step)
         {
             case STEP.TITLE:
                 this.guistyle.normal.textColor = Color.white;
-                GUI.Label(new Rect(Screen.width / 2, Screen.height / 2 , 500.0f, 300.0f), "우주미아", guistyle);
+                GUI.Label(new Rect(Screen.width / 2 - 150, Screen.height / 2 , 500.0f, 300.0f), "우주미아", guistyle);
                 break;
             case STEP.PLAY:
                 this.guistyle.normal.textColor = Color.white;
-                GUI.Label(new Rect(Screen.width / 2, 10f, 200.0f, 20.0f), Mathf.CeilToInt(time_count).ToString(), guistyle);
+                GUI.Label(new Rect(Screen.width / 2 - 100, 10f, 200.0f, 20.0f), Mathf.CeilToInt(time_count).ToString(), guistyle);
 
                 break;
 
             case STEP.DIE:
                 this.guistyle.normal.textColor = Color.white;
-                GUI.Label(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200.0f, 20.0f), Mathf.CeilToInt(this.clear_time).ToString() + " 초 동안 살아남으셨습니다.", guistyle);
+                GUI.Label(new Rect(Screen.width / 2 - 300, Screen.height / 2 - 50, 200.0f, 20.0f), Mathf.CeilToInt(this.clear_time).ToString() + " 초 동안 살아남으셨습니다.", guistyle);
                 break;
         }
     }
@@ -148,6 +159,8 @@ public class Game_Manager : MonoBehaviour
         this.enemy_Generator.enabled = false;
         this.object_Generator.enabled = false;
         this.s_move.enabled = false;
+        this.ui.enabled = false;
+        Debug.Log("stopgame");
     }
 
     // 게임을 시작하는 함수(스크립트를 작동 시킨다)
@@ -156,5 +169,6 @@ public class Game_Manager : MonoBehaviour
         this.enemy_Generator.enabled = true;
         this.object_Generator.enabled = true;
         this.s_move.enabled = true;
+        this.ui.enabled = true;
     }
 }
